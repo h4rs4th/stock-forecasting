@@ -1,53 +1,3 @@
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sb
-
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-
-from sklearn.linear_model import LogisticRegression
-from sklearn.svm import SVC
-from xgboost import XGBClassifier
-from sklearn import metrics
-
-import warnings
-warnings.filterwarnings('ignore')
-
-faetures=pd.read_csv("/content/sample_data/tesla-stock-price.csv")
-
-
-print(np.shape(features))
-if isinstance(features, pd.DataFrame):
-    print(features.isnull().sum())
-features = features.fillna(0)
-
-if isinstance(features, pd.DataFrame):
-  features = features.apply(pd.to_numeric, errors='coerce')
-  features['open-close']  = features['open'] - features['close']
-features['low-high']  = features['low'] - features['high']
-features['target'] = np.where(features['close'].shift(-1) > ['close'], 1, 0)
-
-
-scaler = StandardScaler()
-features = scaler.fit_transform(features)
-
-X_train, X_valid, Y_train, Y_valid = train_test_split(
-    features, target, test_size=0.1, random_state=2022)
-print(X_train.shape, X_valid.shape)
-models = [LogisticRegression(), SVC(
-  kernel='poly', probability=True), XGBClassifier()]
-
-for i in range(3):
-  models[i].fit(X_train, Y_train)
-
-  print(f'{models[i]} : ')
-  print('Training Accuracy : ', metrics.roc_auc_score(
-    Y_train, models[i].predict_proba(X_train)[:,1]))
-  print('Validation Accuracy : ', metrics.roc_auc_score(
-    Y_valid, models[i].predict_proba(X_valid)[:,1]))
-  print()
-
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -97,14 +47,7 @@ print("\nClassification Report:\n", classification_report(y_test, y_pred))
 
 
 
-import pandas as pd
-df=pd.read_csv("/content/sample_data/tesla-stock-price.csv")
-print(df)
-df.describe
-df['open-close']  = df['Open'] - df['Close']
-df['low-high']  = df['Low'] - df['High']
-df['target'] = np.where(df['Close'].shift(-1) > df['Close'], 1, 0)
-prnt(df)
+
 
 
 
